@@ -1,0 +1,11 @@
+{
+    "name": "CA Enhanced",
+    "version": "1.0",
+    "description": "Enhances the CA Support Application",
+    "permissions": ["activeTab", "declarativeContent"],
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+    },
+    "manifest_version": 1
+  }
