@@ -1,20 +1,20 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 'use strict';
 
-let btnAutoUpdate = document.getElementById('btnAutoUpdate');
+let autoUpdateSwitch = document.getElementById('autoUpdateSwitch');
 
-
+// this is called once each time the extension is active, requests the status to set the css of the button appropriately
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
   chrome.tabs.sendMessage(tabs[0].id, {method: "getAutoUpdateState"}, function(response) {
-    let autoUpdate = response.autoUpdateState;
+    let autoUpdate = false;
+    if (response != undefined && response.autoUpdateState != undefined) {
+      autoUpdate = response.autoUpdateState;
+    }
     toggleAutoUpdate(autoUpdate);
   });  
 });
 
-btnAutoUpdate.onclick = function(element) {
+// sends a message to auto-update.js when autoUpdateSwitch is toggled
+autoUpdateSwitch.onchange = function(element) {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {method: "toggleAutoUpdate"}, function(response) {
       let autoUpdate = response.autoUpdateState;
@@ -24,14 +24,11 @@ btnAutoUpdate.onclick = function(element) {
 };
 
 
-
+/**
+ * Changes the styling of the autoUpdateSwitch to match if it's on or off
+ * @param {boolean} autoUpdate state of auto update button
+ */
 function toggleAutoUpdate(autoUpdate) {
-  if (autoUpdate) {
-    btnAutoUpdate.setAttribute("class", "btn btn-success");
-    btnAutoUpdate.innerText = "Auto Update On";
-  } else {
-    btnAutoUpdate.setAttribute("class", "btn btn-danger");
-    btnAutoUpdate.innerText= "Auto Update Off";
-  }
+  autoUpdateSwitch.checked = autoUpdate;
   console.log("auto update toggled");
 }
