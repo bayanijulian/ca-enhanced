@@ -1,6 +1,7 @@
 'use strict';
 
 let autoUpdateSwitch = document.getElementById('autoUpdateSwitch');
+let computeEnhanceActionsBtn = document.getElementById('computeEnhanceActionsBtn');
 
 // this is called once each time the extension is active, requests the status to set the css of the button appropriately
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -20,6 +21,14 @@ autoUpdateSwitch.onchange = function(element) {
       let autoUpdate = response.autoUpdateState;
       toggleAutoUpdate(autoUpdate);
     });
+  });
+};
+
+computeEnhanceActionsBtn.onclick = function(element) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.executeScript(
+      tabs[0].id,
+      {file: 'enhanced-actions.js'});
   });
 };
 

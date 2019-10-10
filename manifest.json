@@ -2,7 +2,7 @@
     "name": "CA Enhanced",
     "version": "1.0",
     "description": "Enhances the CA Support Application",
-    "permissions": ["activeTab", "declarativeContent", "storage", "notifications"],
+    "permissions": ["activeTab", "declarativeContent", "storage", "notifications", "https://support.uillinois.edu/*", "tabs"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false
@@ -24,8 +24,13 @@
     },
     "content_scripts": [
         {
-            "matches":["https://support.uillinois.edu/*"],
+            "matches":["https://support.uillinois.edu/CAisd/pdmweb.exe"],
             "js":["auto-update.js"]
+        },
+        {
+            "matches":["https://support.uillinois.edu/CAisd/html/popup_frames.html?POPUP_URLIX=0+popupType=1"],
+            "js":["auto-complete-ticket.js"],
+            "matchAboutBlank":true
         }
     ],
     "manifest_version": 2

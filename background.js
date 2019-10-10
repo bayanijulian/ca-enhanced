@@ -14,9 +14,10 @@ chrome.runtime.onInstalled.addListener(function() {
       actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
   });
-
- 
 });
+
+let ticketList = [];
+
 //adds message isteners on startup
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -25,12 +26,53 @@ chrome.runtime.onMessage.addListener(
       console.log("notifyCountIncrease message received");
       notifyCountIncrease(request.countLabel, request.countValue);
       sendResponse();
-    } 
+    } else if (request.method == "autoCompleteTicket") {
+      console.log("autoCompleteTicket message received");
+      ticketList.push(request.ticketNumber);
+      sendResponse();
+    }
+});
+
+function ticketIsInTitle(popupTitle) {
+  for (let i = 0; i < ticketList.length; i++) {
+    if (popupTitle.search(ticketList[i]) != -1) {
+      return ticketList[i];
+    }
+  }
+  return popupTitle;
+}
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+  console.log("tab updated");
+  chrome.tabs.query({windowType:'popup'}, function(tabs) {
+    for(let i=0; i < tabs.length; i++) {
+      let popup = tabs[i];
+      console.log(popup.title);
+      let matchesTicket = ticketIsInTitle(popup.title);;
+      if (matchesTicket == popup.title) continue;
+      let ticketIdx = ticketList.indexOf(matchesTicket);
+      ticketList.splice(ticketIdx, 1);
+      // chrome.tabs.executeScript(
+      //   popup.id,
+      //   // works now, make sure ticket num is removed from queue list
+      //   {file: 'auto-complete-ticket.js', matchAboutBlank:true});
+      // console.log("executes the script!");
+      // console.log(ticketList);
+      chrome.tabs.sendMessage(tabs[i].id, {
+        method: "doAutoCompleteTicket",
+        popupTitle: popup.title,
+        }, function(response) {
+        console.log("doAutoComplete message sent");
+        console.log(ticketList + " from response");
+      });
+      console.log(ticketList +" from outer func");
+    }
+  });
 });
 
 chrome.runtime.onStartup.addListener(function(){
    console.log("extension start up");
-   
+  
 });
 
 
