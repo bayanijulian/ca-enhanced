@@ -1,7 +1,7 @@
 {
     "name": "CA Enhanced",
     "version": "1.0",
-    "description": "Enhances the CA Support Application",
+    "description": "Enhances the CA Service Desk Manager. You are able to monitor ticket queues you are able to autofill password scramble tickets.",
     "permissions": ["activeTab", "declarativeContent", "storage", "notifications", "https://support.uillinois.edu/*", "tabs"],
     "background": {
       "scripts": ["background.js"],
@@ -32,6 +32,10 @@
             "js":["auto-complete-ticket.js"],
             "matchAboutBlank":true
         }
+    ],
+    "web_accessible_resources":[
+        "template-defaults.js",
+        "bootstrap.min.css"
     ],
     "manifest_version": 2
   }

@@ -39,7 +39,7 @@ function isPasswordScrambleTicket(ticket) {
 
 function createBtn(ticket) {    
     let btn = document.createElement("a");
-    btn.innerText = "Quick Close";
+    btn.innerHTML = 'Autofill';
     btn.addEventListener("click", function(){
         clickTicket(ticket);
     });
